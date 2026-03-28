@@ -5,6 +5,12 @@ pub enum LetterFeedback {
     Green,
 }
 
+#[derive(Debug, Clone)]
+pub struct GuessResult {
+    pub guess: String,
+    pub pattern: Vec<LetterFeedback>,
+}
+
 pub fn score_guess(guess: &str, answer: &str) -> Vec<LetterFeedback> {
     let guess_chars: Vec<char> = guess.chars().collect();
     let answer_chars: Vec<char> = answer.chars().collect();
@@ -34,6 +40,21 @@ pub fn score_guess(guess: &str, answer: &str) -> Vec<LetterFeedback> {
     }
 
     result
+}
+
+pub fn parse_pattern(input: &str) -> Option<Vec<LetterFeedback>> {
+    if input.len() != 5 {
+        return None;
+    }
+
+    input.chars()
+        .map(|c| match c {
+            '0' => Some(LetterFeedback::Gray),
+            '1' => Some(LetterFeedback::Yellow),
+            '2' => Some(LetterFeedback::Green),
+            _ => None,
+        })
+        .collect()
 }
 
 #[cfg(test)]
@@ -80,6 +101,21 @@ mod tests {
                 LetterFeedback::Yellow,
                 LetterFeedback::Yellow,
                 LetterFeedback::Green,
+            ]
+        );
+    }
+
+    #[test]
+    fn parses_pattern_string() {
+        let pattern = parse_pattern("01220").unwrap();
+        assert_eq!(
+            pattern,
+            vec![
+                LetterFeedback::Gray,
+                LetterFeedback::Yellow,
+                LetterFeedback::Green,
+                LetterFeedback::Green,
+                LetterFeedback::Gray,
             ]
         );
     }

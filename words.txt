@@ -18,3 +18,8 @@ grace
 trace
 blame
 pride
+adapt
+allow
+aloud
+vault
+malta

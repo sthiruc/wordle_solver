@@ -1,28 +1,26 @@
 mod word_list;
 mod feedback;
+mod solver;
 
-use feedback::{score_guess, LetterFeedback};
+use feedback::{parse_pattern, GuessResult};
+use solver::filter_candidates;
 use word_list::load_words;
 
 fn main() {
     let words = load_words("words.txt").expect("Failed to load words");
-    println!("Loaded {} words", words.len());
 
-    let guess = "crane";
-    let answer = "trace";
+    let history = vec![
+        GuessResult {
+            guess: "crane".to_string(),
+            pattern: parse_pattern("00100").expect("Invalid pattern"),
+        },
+    ];
 
-    let result = score_guess(guess, answer);
+    let candidates = filter_candidates(&words, &history);
 
-    println!("Guess: {guess}");
-    println!("Answer: {answer}");
-    println!("Feedback: {:?}", result);
+    println!("Remaining candidates: {}", candidates.len());
 
-    for tile in result {
-        match tile {
-            LetterFeedback::Gray => print!("⬛"),
-            LetterFeedback::Yellow => print!("🟨"),
-            LetterFeedback::Green => print!("🟩"),
-        }
+    for word in candidates.iter().take(20) {
+        println!("{word}");
     }
-    println!();
 }
