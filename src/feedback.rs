@@ -57,6 +57,17 @@ pub fn parse_pattern(input: &str) -> Option<Vec<LetterFeedback>> {
         .collect()
 }
 
+pub fn pattern_to_string(pattern: &[LetterFeedback]) -> String {
+    pattern
+        .iter()
+        .map(|tile| match tile {
+            LetterFeedback::Gray => '0',
+            LetterFeedback::Yellow => '1',
+            LetterFeedback::Green => '2',
+        })
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
